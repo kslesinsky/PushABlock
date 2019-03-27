@@ -4,7 +4,8 @@ using UnityEngine;
 
 public enum Facing { Undefined = 0, North = 1, West = 2, East = 3, South = 4 }
 
-public class Pos // also used for Vectors
+// A Position (also used for Vectors)
+public class Pos
 {
     public int X;
     public int Y;
@@ -65,6 +66,8 @@ public class Pos // also used for Vectors
         }
     }
 }
+
+// A Position & Facing
 public class PosFace : Pos
 {
     public Facing Facing;
@@ -82,29 +85,6 @@ public class PosFace : Pos
     {
         this.Facing = RotatedFacing(this.Facing, moveType);
     }
-
-    //// maybe eliminate?
-    //public static PosFace GetMoveVectorFor(Facing inFacing, MoveType moveType)
-    //{
-    //    PosFace moveVector;
-    //    switch (moveType)
-    //    {
-    //        case MoveType.Forward:
-    //        case MoveType.Reverse:
-    //            var fwd = Pos.ForwardFor(inFacing);
-    //            int mult = (moveType == MoveType.Forward ? 1 : -1); // multiplier
-    //            moveVector = new PosFace(fwd.X * mult, fwd.Y * mult, inFacing);
-    //            break;
-    //        case MoveType.RotLeft:
-    //        case MoveType.RotRight:
-    //            moveVector = new PosFace(0, 0, RotatedFacing(inFacing, moveType));
-    //            break;
-    //        default:
-    //            moveVector = new PosFace(0, 0, Facing.Undefined);
-    //            break;
-    //    }
-    //    return moveVector;
-    //}
 
     public static Facing RotatedFacing(Facing inFacing, MoveType moveType)
     {

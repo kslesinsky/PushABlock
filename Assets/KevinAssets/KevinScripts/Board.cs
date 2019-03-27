@@ -136,7 +136,7 @@ public class Board : BoardCore, IBoard
             if (newSquare == null || !newSquare.CanMoveOnToMe())
                 return false; // move fails
 
-            ClearSquareAt(posFace); //assuming there can only be one thing on a square
+            ClearSquareAt(posFace);
             newSquare.ThingOnMe = character;
             posThing.PosFace.SetPos(newPos);
 

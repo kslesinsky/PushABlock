@@ -118,7 +118,7 @@ public class BoardEngine
             }
             if (success)
                 OnThingMoved(posThing);
-            //TODO-FUTURE: handle if successful "move" that didn't change the position of facing of the thing
+            //TODO-FUTURE: handle if successful "move" that didn't change the position or facing of the thing
         }
     }
 }

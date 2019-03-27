@@ -12,6 +12,7 @@ public class GameEngine : MonoBehaviour
         var board = new Board();
         board.SetupForTesting();
         boardEngine = new BoardEngine(board);
+        //TODO: instantiate GameObjects
         boardEngine.ThingMoved += ThingMovedHandler;
 
         StartCoroutine(boardEngine.Run());

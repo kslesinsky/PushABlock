@@ -36,6 +36,7 @@ public class Robot : Character
     }
 }
 
+// A wrapper class, used because a Thing doesn't know its position or facing
 public class PositionedThing
 {
     public Thing Thing { get; set; }
@@ -49,7 +50,7 @@ public class PositionedThing
     }
 }
 
-public interface ISquare
+public interface ISquare // ?not needed?
 {
     Thing ThingOnMe { get; }
     bool CanMoveOnToMe();
@@ -60,7 +61,7 @@ public class Square : ISquare
 
     public bool CanMoveOnToMe()
     {
-        return (ThingOnMe == null);
+        return (ThingOnMe == null); // there can only be one thing on a square
     }
 
     //public Square() { }

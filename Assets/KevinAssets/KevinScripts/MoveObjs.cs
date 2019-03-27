@@ -45,6 +45,7 @@ public class Move
         }
     }
 }
+
 public class DesiredMove
 {
     public Move PrimaryMove { get; set; }
