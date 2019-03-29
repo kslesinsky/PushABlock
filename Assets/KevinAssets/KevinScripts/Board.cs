@@ -16,8 +16,8 @@ public interface IBoard
 
 public class BoardCore
 {
-    protected const int MAX_X = 8;
-    protected const int MAX_Y = 8;
+    public const int MAX_X = 8;
+    public const int MAX_Y = 8;
 
     protected Square[,] square; // the array of Squares
 
