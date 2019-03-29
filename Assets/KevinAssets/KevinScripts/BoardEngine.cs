@@ -110,15 +110,19 @@ public class BoardEngine
         }
         if (desiredMove.PrimaryMove != null)
         {
-            PositionedThing posThing;
-            bool success = theBoard.TryMove(character.IdOnBoard, desiredMove.PrimaryMove, out posThing);
+            IEnumerable<PositionedThing> posThingsThatMoved;
+            bool success = theBoard.TryMove(character.IdOnBoard, desiredMove.PrimaryMove, out posThingsThatMoved);
             if (!success && desiredMove.SecondaryMove != null)
             {
-                success = theBoard.TryMove(character.IdOnBoard, desiredMove.SecondaryMove, out posThing);
+                success = theBoard.TryMove(character.IdOnBoard, desiredMove.SecondaryMove, out posThingsThatMoved);
             }
             if (success)
-                OnThingMoved(posThing);
-            //TODO-FUTURE: handle if successful "move" that didn't change the position or facing of the thing
+            {
+                foreach (var posThing in posThingsThatMoved)
+                {
+                    OnThingMoved(posThing);
+                }
+            }
         }
     }
 }

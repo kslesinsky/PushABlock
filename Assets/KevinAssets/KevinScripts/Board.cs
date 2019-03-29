@@ -11,7 +11,7 @@ public interface IBoard
     IEnumerable<Character> GetCharacters();
     //PosFace GetSpecialSquarePos(SquareType squareType);
     ISurroundings GetSurroundings(Character character);
-    bool TryMove(int characterId, Move move, out PositionedThing posThing);
+    bool TryMove(int characterId, Move move, out IEnumerable<PositionedThing> posThingsThatMoved);
 }
 
 public class BoardCore
@@ -38,6 +38,8 @@ public class BoardCore
 
     public Square SquareAt(Pos pos)
     {
+        if (pos == null)
+            return null;
         return SquareAt(pos.X, pos.Y);
     }
     public Square SquareAt(int x, int y) // this signature needed?
@@ -108,11 +110,16 @@ public class Board : BoardCore, IBoard
     {
         return theThings.Values;
     }
+
     public PositionedThing GetPositionedThing(int id)
     {
         if (!theThings.ContainsKey(id))
             return null;
         return theThings[id];
+    }
+    public PositionedThing GetPositionedThing(Thing thing)
+    {
+        return GetPositionedThing(thing.IdOnBoard);
     }
 
     public IEnumerable<Character> GetCharacters()
@@ -127,40 +134,69 @@ public class Board : BoardCore, IBoard
     }
 
     // returns true iff move is successful
-    public bool TryMove(int characterId, Move move, out PositionedThing posThing)
+    public bool TryMove(int characterId, Move move, out IEnumerable<PositionedThing> posThingsThatMoved)
     {
-        posThing = GetPositionedThing(characterId);
-        if (!(posThing.Thing is Character))
+        posThingsThatMoved = new List<PositionedThing>();
+
+        var characterPosThing = GetPositionedThing(characterId);
+        if (!(characterPosThing.Thing is Character))
             return false; // throw new NonCriticalException?
 
-        var character = (Character)posThing.Thing;
-        var posFace = posThing.PosFace;
+        var character = (Character)characterPosThing.Thing;
+        var posFace = characterPosThing.PosFace;
 
-        //bool changed = false;
+        bool changed = false;
         if (move.ChangesPosition())
         {
             var moveVector = Pos.MoveVectorFor(posFace.Facing, move.MoveType);
             var newPos = ((Pos)posFace) + moveVector;
             var newSquare = SquareAt(newPos);
-            if (newSquare == null || !newSquare.CanMoveOnToMe())
+            if (newSquare == null)
                 return false; // move fails
 
+            if (newSquare.ThingOnMe != null) // trying "pushing" it
+            {
+                PositionedThing posThing1;
+                bool moved = TryMoveThing(newPos, moveVector, out posThing1);
+                if (!moved)
+                    return false; // couldn't "push" it; move fails
+
+                ((List<PositionedThing>)posThingsThatMoved).Add(posThing1);
+            }
             ClearSquareAt(posFace);
             newSquare.ThingOnMe = character;
-            posThing.PosFace.SetPos(newPos);
+            characterPosThing.PosFace.SetPos(newPos);
 
-            //changed = true;
+            changed = true;
         }
 
         if (move.ChangesFacing())
         {
-            posThing.PosFace.Rotate(move.MoveType);
-
-            //changed = true;
+            characterPosThing.PosFace.Rotate(move.MoveType);
+            changed = true;
         }
 
-        //if (changed) ...trigger MovedRotatedThing / MovedRotatedCharacter
+        if (changed)
+            ((List<PositionedThing>)posThingsThatMoved).Add(characterPosThing);
+        return true;
+    }
 
+    private bool TryMoveThing(Pos pos, Pos moveVector, out PositionedThing posThing) //?optional arg for Square
+    {
+        posThing = null;
+        var square0 = SquareAt(pos);
+        var pos1 = pos + moveVector;
+        var square1 = SquareAt(pos1);
+        //Note: we're ignoring the possibility of having squares in between square0 and square1
+        if (square0 == null || square1 == null || !square1.CanMoveOnToMe())
+            return false;
+        if (square0.ThingOnMe == null)
+            return true; // there was nothing to move; call that success
+
+        posThing = GetPositionedThing(square0.ThingOnMe);
+        square0.ThingOnMe = null;
+        square1.ThingOnMe = posThing.Thing;
+        posThing.PosFace.SetPos(pos1);
         return true;
     }
 }
