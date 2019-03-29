@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3815271736851148240
+--- !u!1001 &1142335829275228601
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 6296045292667222813, guid: 7d97ac81a80f2464d8c2210d62e6d176,
         type: 3}
       propertyPath: m_Name
-      value: PlayerCapsule
+      value: RobotCapsule
       objectReference: {fileID: 0}
     - target: {fileID: 4080965852596118012, guid: 7d97ac81a80f2464d8c2210d62e6d176,
         type: 3}
@@ -71,6 +71,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 58a5523bf1e88cd4d81ad7505fe73c48, type: 2}
+      objectReference: {fileID: 2100000, guid: 36f20cabb63b7ac46ad92db04acda2f4, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d97ac81a80f2464d8c2210d62e6d176, type: 3}

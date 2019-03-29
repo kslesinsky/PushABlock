@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameEngine : MonoBehaviour
 {
     public Transform playerPrefab;
+    public Transform robotPrefab;
     public Transform blockPrefab;
 
     private BoardEngine boardEngine;
@@ -44,7 +45,7 @@ public class GameEngine : MonoBehaviour
             }
             else if (thing is Robot)
             {
-                transform = Instantiate(playerPrefab, posFace);
+                transform = Instantiate(robotPrefab, posFace);
             }
             else if (thing is Block)
             {
