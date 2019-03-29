@@ -2,34 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameConvert
-{
-    public static Vector3 Vector3From(Pos pos)
-    {
-        return new Vector3(pos.X - (BoardCore.MAX_X / 2), 0, pos.Y - (BoardCore.MAX_Y / 2));
-    }
-
-    public static Quaternion QuaternionFrom(Facing facing)
-    {
-        switch(facing)
-        {
-            case Facing.North:
-                return Quaternion.LookRotation(Vector3.forward);
-            case Facing.West:
-                return Quaternion.LookRotation(Vector3.left);
-            case Facing.East:
-                return Quaternion.LookRotation(Vector3.right);
-            case Facing.South:
-                return Quaternion.LookRotation(Vector3.back);
-            default:
-                return Quaternion.identity;
-        }
-    }
-}
-
 public class GameEngine : MonoBehaviour
 {
     public Transform playerPrefab;
+    public Transform blockPrefab;
+
     private BoardEngine boardEngine;
     private Dictionary<int, Transform> thingTransforms = new Dictionary<int, Transform>();
 
@@ -46,7 +23,7 @@ public class GameEngine : MonoBehaviour
     {
         var board = new Board();
         board.SetupForTesting();
-        InstantiateGameObjectsFromThingsOnBoard(board);
+        InstantiateGameObjectsFromThings(board);
 
         boardEngine = new BoardEngine(board);
         boardEngine.ThingMoved += ThingMovedHandler;
@@ -54,7 +31,7 @@ public class GameEngine : MonoBehaviour
         StartCoroutine(boardEngine.Run());
     }
 
-    void InstantiateGameObjectsFromThingsOnBoard(IBoard board)
+    void InstantiateGameObjectsFromThings(IBoard board)
     {
         foreach(var posThing in board.GetAllPositionedThings())
         {
@@ -63,18 +40,25 @@ public class GameEngine : MonoBehaviour
             Transform transform = null;
             if (thing is Player)
             {
-                transform = Instantiate(playerPrefab, GameConvert.Vector3From(posFace), GameConvert.QuaternionFrom(posFace.Facing));
-
+                transform = Instantiate(playerPrefab, posFace);
             }
             else if (thing is Robot)
             {
-                transform = Instantiate(playerPrefab, GameConvert.Vector3From(posFace), GameConvert.QuaternionFrom(posFace.Facing));
+                transform = Instantiate(playerPrefab, posFace);
+            }
+            else if (thing is Block)
+            {
+                transform = Instantiate(blockPrefab, posFace);
             }
             if (transform != null)
             {
                 thingTransforms[thing.IdOnBoard] = transform;
             }
         }
+    }
+    Transform Instantiate(Transform transform, PosFace posFace)
+    {
+        return Instantiate(transform, GameConvert.Vector3From(posFace), GameConvert.QuaternionFrom(posFace.Facing));
     }
 
     void ThingMovedHandler(object sender, BoardEventArgs args)

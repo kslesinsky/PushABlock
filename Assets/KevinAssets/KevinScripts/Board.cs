@@ -64,9 +64,18 @@ public class Board : BoardCore, IBoard
         var pfPlayer = new PosFace(4, 0, Facing.North);
         var robot = new Robot();
         var pfRobot = new PosFace(0, 2, Facing.East);
-
         AddThingToBoard(player, pfPlayer);
         AddThingToBoard(robot, pfRobot);
+
+        var block = new Block();
+        var pfBlock = new PosFace(2, 2);
+        AddThingToBoard(block, pfBlock);
+        block = new Block();
+        pfBlock = new PosFace(6, 5);
+        AddThingToBoard(block, pfBlock);
+        block = new Block();
+        pfBlock = new PosFace(7, 6);
+        AddThingToBoard(block, pfBlock);
     }
 
     // returns true if successfully added
