@@ -9,7 +9,7 @@ public interface IBoard
     IEnumerable<PositionedThing> GetAllPositionedThings();
     PositionedThing GetPositionedThing(int id);
     IEnumerable<Character> GetCharacters();
-    //PosFace GetSpecialSquarePos(SquareType squareType);
+    IEnumerable<Pos> GetSpecialSquarePositions(SquareType squareType);
     ISurroundings GetSurroundings(Character character);
     bool TryMove(int characterId, Move move, out IEnumerable<PositionedThing> posThingsThatMoved);
 }
@@ -23,6 +23,8 @@ public class BoardCore
 
     protected Dictionary<int, PositionedThing> theThings = new Dictionary<int, PositionedThing>();
     //key is thing.IdOnBoard
+
+    protected Dictionary<SquareType, IEnumerable<Pos>> specialSquarePos = new Dictionary<SquareType, IEnumerable<Pos>>();
 
     public BoardCore()
     {
@@ -49,6 +51,13 @@ public class BoardCore
             //throw new Exception("Trying to GetSquare out of bounds: " + x + "," + y);
         return square[x, y];
     }
+
+    protected List<Pos> GetSpecialSquarePosList(SquareType squareType)
+    {
+        if (!specialSquarePos.ContainsKey(squareType))
+            specialSquarePos[squareType] = new List<Pos>();
+        return (List<Pos>)specialSquarePos[squareType];
+    }
 }
 public class Board : BoardCore, IBoard
 {
@@ -64,13 +73,19 @@ public class Board : BoardCore, IBoard
     {
         var player = new Player();
         var pfPlayer = new PosFace(4, 0, Facing.North);
-        var robot = new Robot();
-        var pfRobot = new PosFace(0, 2, Facing.East);
         AddThingToBoard(player, pfPlayer);
+        var robot = new Robot();
+        var pfRobot = new PosFace(0, 3, Facing.East);
+        AddThingToBoard(robot, pfRobot);
+        robot = new Robot();
+        pfRobot = new PosFace(8, 4, Facing.West);
         AddThingToBoard(robot, pfRobot);
 
-        var block = new Block();
-        var pfBlock = new PosFace(2, 2);
+        var block = new Block(isGameBlock: true);
+        var pfBlock = new PosFace(4, 1);
+        AddThingToBoard(block, pfBlock);
+        block = new Block();
+        pfBlock = new PosFace(2, 3);
         AddThingToBoard(block, pfBlock);
         block = new Block();
         pfBlock = new PosFace(6, 5);
@@ -78,6 +93,8 @@ public class Board : BoardCore, IBoard
         block = new Block();
         pfBlock = new PosFace(7, 6);
         AddThingToBoard(block, pfBlock);
+
+        AddSquareDesignator(new Pos(8, 8), SquareType.Goal);
     }
 
     // returns true if successfully added
@@ -97,6 +114,20 @@ public class Board : BoardCore, IBoard
         }
         //else throw new NonCriticalException
         return false; // didn't add
+    }
+
+    // returns true if successfully added
+    public bool AddSquareDesignator(Pos pos, SquareType squareType)
+    {
+        var square = SquareAt(pos);
+        if (square == null)
+            return false;
+        //TODO: check if Square already has a SquareType != 0
+
+        square.SquareType = squareType;
+        var ssPosList = GetSpecialSquarePosList(squareType);
+        ssPosList.Add(pos);
+        return true;
     }
 
     public void ClearSquareAt(Pos pos)
@@ -128,10 +159,21 @@ public class Board : BoardCore, IBoard
         // ? does the above need ToArray() ? concern about a race condition...
     }
 
+    public IEnumerable<Pos> GetSpecialSquarePositions(SquareType squareType)
+    {
+        var posList = GetSpecialSquarePosList(squareType);
+        return posList;
+        // ?should do ToArray? and should copy the Pos's so they can't be altered?
+    }
+
     public ISurroundings GetSurroundings(Character character)
     {
         return null; //TODO: implement!
     }
+
+
+
+    // ----- Try Moving -----
 
     // returns true iff move is successful
     public bool TryMove(int characterId, Move move, out IEnumerable<PositionedThing> posThingsThatMoved)

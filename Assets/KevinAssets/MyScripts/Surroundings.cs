@@ -6,12 +6,12 @@ using UnityEngine;
 // local to the character; positive Y is forward facing
 public interface ISurroundings
 {
-    ISquare SquareAt(int x, int y);
+    Square SquareAt(int x, int y);
 }
 
 public class Surroundings : ISurroundings
 {
-    public ISquare SquareAt(int x, int y)
+    public Square SquareAt(int x, int y)
     {
         throw new System.NotImplementedException();
     }

@@ -77,11 +77,13 @@ public class PosFace : Pos
         this.Facing = facing;
     }
     public PosFace(int x, int y) : this(x, y, Facing.Undefined) { }
+    public PosFace(Pos pos) : this(pos.X, pos.Y, Facing.Undefined) { }
 
     public PosFace(PosFace posFace) : base(posFace)
     {
         this.Facing = posFace.Facing;
     }
+    // --- end Constructors ---
 
     public void Rotate(MoveType moveType)
     {

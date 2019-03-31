@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//TODO: Revisit this.  Thinking about the int vals in a json array to define a level.
+//      But if we have Square.SquareType, we don't need to know if a Square started off with a block on it, etc... right?
+//      ?Change Empty to Default?
 public enum SquareType { Empty = 0, Blocky = 1, CharStart = 2, GameBlockStart = 3, Goal = 4 }
 //Blocky:starts with a block on it
 //Elsewhere? designate facing of CharStart
@@ -11,7 +14,15 @@ public abstract class Thing
     public int IdOnBoard = -1;
 }
 
-public class Block : Thing { }
+public class Block : Thing
+{
+    public Block(bool isGameBlock = false)
+    {
+        this.IsGameBlock = isGameBlock;
+    }
+
+    public bool IsGameBlock { get; set; }
+}
 
 public abstract class Character : Thing
 {
@@ -50,14 +61,12 @@ public class PositionedThing
     }
 }
 
-public interface ISquare // ?not needed?
-{
-    Thing ThingOnMe { get; }
-    bool CanMoveOnToMe();
-}
-public class Square : ISquare
+public class Square
 {
     public Thing ThingOnMe { get; set; }
+
+    public SquareType SquareType { get; set; }
+    //TODO: allow more than one type (designator)
 
     public bool CanMoveOnToMe()
     {

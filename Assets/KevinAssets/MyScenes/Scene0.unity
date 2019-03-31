@@ -389,6 +389,10 @@ MonoBehaviour:
     type: 3}
   blockPrefab: {fileID: 6422512939463465811, guid: ddfd2cf47135fef4aa272d9603404408,
     type: 3}
+  gameblockPrefab: {fileID: 8168680699902266678, guid: a4b2860da3ca07f4bb2f0b48729415f6,
+    type: 3}
+  goalSquarePrefab: {fileID: 6863810327496467225, guid: d2c2013450f6a1546ba5e9ffa6e7877f,
+    type: 3}
 --- !u!4 &1924176303
 Transform:
   m_ObjectHideFlags: 0

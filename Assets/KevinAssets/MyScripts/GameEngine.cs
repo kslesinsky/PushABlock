@@ -7,6 +7,8 @@ public class GameEngine : MonoBehaviour
     public Transform playerPrefab;
     public Transform robotPrefab;
     public Transform blockPrefab;
+    public Transform gameblockPrefab;
+    public Transform goalSquarePrefab;
 
     private BoardEngine boardEngine;
     private Dictionary<int, Transform> thingTransforms = new Dictionary<int, Transform>();
@@ -25,11 +27,21 @@ public class GameEngine : MonoBehaviour
         var board = new Board();
         board.SetupForTesting();
         InstantiateGameObjectsFromThings(board);
+        InstantiateOtherGameObjects(board);
 
         boardEngine = new BoardEngine(board);
         boardEngine.ThingMoved += ThingMovedHandler;
 
         StartCoroutine(boardEngine.Run());
+    }
+
+    void InstantiateOtherGameObjects(IBoard board)
+    {
+        var ssPositions = board.GetSpecialSquarePositions(SquareType.Goal);
+        foreach (var pos in ssPositions)
+        {
+            Instantiate(goalSquarePrefab, pos);
+        }
     }
 
     void InstantiateGameObjectsFromThings(IBoard board)
@@ -49,13 +61,21 @@ public class GameEngine : MonoBehaviour
             }
             else if (thing is Block)
             {
-                transform = Instantiate(blockPrefab, posFace);
+                if (((Block)thing).IsGameBlock)
+                    transform = Instantiate(gameblockPrefab, posFace);
+                else
+                    transform = Instantiate(blockPrefab, posFace);
             }
             if (transform != null)
             {
                 thingTransforms[thing.IdOnBoard] = transform;
             }
         }
+    }
+
+    Transform Instantiate(Transform transform, Pos pos)
+    {
+        return Instantiate(transform, new PosFace(pos));
     }
     Transform Instantiate(Transform transform, PosFace posFace)
     {
