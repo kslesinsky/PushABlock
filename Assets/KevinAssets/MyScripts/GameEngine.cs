@@ -31,6 +31,7 @@ public class GameEngine : MonoBehaviour
 
         boardEngine = new BoardEngine(board);
         boardEngine.ThingMoved += ThingMovedHandler;
+        boardEngine.DebugMessageEvent += DebugMessageHandler;
 
         StartCoroutine(boardEngine.Run());
     }
@@ -85,8 +86,8 @@ public class GameEngine : MonoBehaviour
     void ThingMovedHandler(object sender, BoardEventArgs args)
     {
         var pf = args.NewPosFace;
-        var msg = string.Format("{0}: {1},{2} {3}", args.ThingId, pf.X, pf.Y, pf.Facing);
-        print(msg);
+        //var msg = string.Format("{0}: {1},{2} {3}", args.ThingId, pf.X, pf.Y, pf.Facing);
+        //print(msg);
 
         var transform = GetThingTransform(args.ThingId);
         if (transform != null)
@@ -94,6 +95,11 @@ public class GameEngine : MonoBehaviour
             transform.position = GameConvert.Vector3From(pf);
             transform.rotation = GameConvert.QuaternionFrom(pf.Facing);
         }
+    }
+
+    void DebugMessageHandler(object sender, BoardEventArgs args)
+    {
+        Debug.Log(args.Message);
     }
 
     // Update is called once per frame

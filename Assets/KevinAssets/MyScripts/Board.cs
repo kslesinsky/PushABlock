@@ -6,6 +6,7 @@ using UnityEngine;
 
 public interface IBoard
 {
+    Square SquareAt(Pos pos);
     IEnumerable<PositionedThing> GetAllPositionedThings();
     PositionedThing GetPositionedThing(int id);
     IEnumerable<Character> GetCharacters();
@@ -196,8 +197,11 @@ public class Board : BoardCore, IBoard
             if (newSquare == null)
                 return false; // move fails
 
-            if (newSquare.ThingOnMe != null) // trying "pushing" it
+            if (newSquare.ThingOnMe != null) // maybe trying "pushing" it
             {
+                //if (move.MoveType != MoveType.Forward)
+                //    return false; // can only push forwards
+
                 PositionedThing posThing1;
                 bool moved = TryMoveThing(newPos, moveVector, out posThing1);
                 if (!moved)

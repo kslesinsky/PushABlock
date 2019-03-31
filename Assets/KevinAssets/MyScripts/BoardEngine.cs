@@ -7,6 +7,7 @@ public class BoardEventArgs : EventArgs
 {
     public int ThingId { get; set; }
     public PosFace NewPosFace { get; set; }
+    public String Message { get; set; }
 }
 
 public class BoardEngine
@@ -26,6 +27,20 @@ public class BoardEngine
             //handler(this, args); // don't need to pass this ?
         }
     }
+
+    public event EventHandler<BoardEventArgs> DebugMessageEvent;
+    protected virtual void DebugMessage(string message)
+    {
+        var handler = DebugMessageEvent;
+        if (handler != null)
+        {
+            var args = new BoardEventArgs
+            {
+                Message = message
+            };
+            handler(null, args);
+        }
+    }
     // --- done Events ---
 
     private IBoard theBoard;
@@ -34,10 +49,13 @@ public class BoardEngine
         get { return theBoard; }
     }
 
+    public int CompletedRounds { get; private set; }
+
     public BoardEngine(IBoard board)
     {
         theBoard = board;
     }
+    // --- done Constructor ---
 
     private MoveType? simpleMoveQueue; // for now, one item max in the queue
     public bool AddToMoveQueue(MoveType moveType)
@@ -93,6 +111,27 @@ public class BoardEngine
                 yield return new WaitForSeconds(.1f); // ?change to a regular yield return
             }
             //?WaitForSeconds here?
+
+            CompletedRounds++;
+            DebugMessage(CompletedRounds + " rounds complete");
+
+            CheckSpecialSquares();
+        }
+    }
+
+    private void CheckSpecialSquares()
+    {
+        var positions = theBoard.GetSpecialSquarePositions(SquareType.Goal);
+        foreach (var goalPos in positions)
+        {
+            var square = theBoard.SquareAt(goalPos);
+            if (square != null && square.ThingOnMe != null)
+            {
+                if (square.ThingOnMe is Block && ((Block)square.ThingOnMe).IsGameBlock)
+                {
+                    DebugMessage("You win!");
+                }
+            }
         }
     }
 
