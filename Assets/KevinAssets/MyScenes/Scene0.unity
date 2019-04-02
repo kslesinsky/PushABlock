@@ -454,6 +454,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1924176303}
   - component: {fileID: 1924176302}
+  - component: {fileID: 1924176304}
   m_Layer: 0
   m_Name: GameEngine
   m_TagString: Untagged
@@ -473,6 +474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ceeeeb2d269044ab556849561f47a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GV: {fileID: 1924176304}
   playerPrefab: {fileID: 887228625825565740, guid: 4a822afd2700fee4f88bb314cf150a20,
     type: 3}
   robotPrefab: {fileID: 3997196115305502789, guid: e5b95e1fa7677b24f9cf4af60f961c35,
@@ -497,3 +499,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1924176304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1924176301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2ad36a9ef5bb7945964cb86bc719834, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 887228625825565740, guid: 4a822afd2700fee4f88bb314cf150a20,
+    type: 3}
+  robotPrefab: {fileID: 3997196115305502789, guid: e5b95e1fa7677b24f9cf4af60f961c35,
+    type: 3}
+  blockPrefab: {fileID: 6422512939463465811, guid: ddfd2cf47135fef4aa272d9603404408,
+    type: 3}
+  gameblockPrefab: {fileID: 8168680699902266678, guid: a4b2860da3ca07f4bb2f0b48729415f6,
+    type: 3}
+  goalSquarePrefab: {fileID: 6863810327496467225, guid: d2c2013450f6a1546ba5e9ffa6e7877f,
+    type: 3}
