@@ -70,34 +70,6 @@ public class Board : BoardCore, IBoard
         return thingId;
     } // Take the return value, remember the Id, and assign Thing & PosFace to theThings[thingId]
 
-    public void SetupForTesting()
-    {
-        var player = new Player();
-        var pfPlayer = new PosFace(4, 0, Facing.North);
-        AddThingToBoard(player, pfPlayer);
-        var robot = new Robot();
-        var pfRobot = new PosFace(0, 3, Facing.East);
-        AddThingToBoard(robot, pfRobot);
-        robot = new Robot();
-        pfRobot = new PosFace(8, 4, Facing.West);
-        AddThingToBoard(robot, pfRobot);
-
-        var block = new Block(isGameBlock: true);
-        var pfBlock = new PosFace(4, 1);
-        AddThingToBoard(block, pfBlock);
-        block = new Block();
-        pfBlock = new PosFace(2, 3);
-        AddThingToBoard(block, pfBlock);
-        block = new Block();
-        pfBlock = new PosFace(6, 5);
-        AddThingToBoard(block, pfBlock);
-        block = new Block();
-        pfBlock = new PosFace(7, 6);
-        AddThingToBoard(block, pfBlock);
-
-        AddSquareDesignator(new Pos(8, 8), SquareType.Goal);
-    }
-
     // returns true if successfully added
     public bool AddThingToBoard(Thing thing, PosFace posFace)
     {
@@ -244,5 +216,36 @@ public class Board : BoardCore, IBoard
         square1.ThingOnMe = posThing.Thing;
         posThing.PosFace.SetPos(pos1);
         return true;
+    }
+}
+
+public static class BoardTest
+{
+    public static void SetupForTesting(Board b)
+    {
+        var player = new Player();
+        var pfPlayer = new PosFace(4, 0, Facing.North);
+        b.AddThingToBoard(player, pfPlayer);
+        var robot = new Robot();
+        var pfRobot = new PosFace(0, 3, Facing.East);
+        b.AddThingToBoard(robot, pfRobot);
+        robot = new Robot();
+        pfRobot = new PosFace(8, 4, Facing.West);
+        b.AddThingToBoard(robot, pfRobot);
+
+        var block = new Block(isGameBlock: true);
+        var pfBlock = new PosFace(4, 1);
+        b.AddThingToBoard(block, pfBlock);
+        block = new Block();
+        pfBlock = new PosFace(2, 3);
+        b.AddThingToBoard(block, pfBlock);
+        block = new Block();
+        pfBlock = new PosFace(6, 5);
+        b.AddThingToBoard(block, pfBlock);
+        block = new Block();
+        pfBlock = new PosFace(7, 6);
+        b.AddThingToBoard(block, pfBlock);
+
+        b.AddSquareDesignator(new Pos(8, 8), SquareType.Goal);
     }
 }

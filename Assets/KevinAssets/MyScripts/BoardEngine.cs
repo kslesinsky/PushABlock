@@ -28,6 +28,17 @@ public class BoardEngine
         }
     }
 
+    public event EventHandler<BoardEventArgs> GameEnded;
+    protected virtual void OnGameEnded()
+    {
+        var handler = GameEnded;
+        if (handler != null)
+        {
+            var args = new BoardEventArgs();
+            handler(null, args);
+        }
+    }
+
     public event EventHandler<BoardEventArgs> DebugMessageEvent;
     protected virtual void DebugMessage(string message)
     {
@@ -48,14 +59,26 @@ public class BoardEngine
     {
         get { return theBoard; }
     }
+    public bool UseBoard(IBoard board)
+    {
+        if (InPlay)
+        {
+            DebugMessage("Tried to set the BoardEngine's Board while in play.");
+            return false;
+        }
+        theBoard = board;
+        return true;
+    }
 
+    public bool InPlay { get; private set; }
     public int CompletedRounds { get; private set; }
 
-    public BoardEngine(IBoard board)
+    public void RemoveTheBoardAndReset()
     {
-        theBoard = board;
+        // ? check if InPlay ?
+        theBoard = null;
+        CompletedRounds = 0;
     }
-    // --- done Constructor ---
 
     private MoveType? simpleMoveQueue; // for now, one item max in the queue
     public bool AddToMoveQueue(MoveType moveType)
@@ -79,19 +102,17 @@ public class BoardEngine
         simpleMoveQueue = null;
         return nextMove;
     }
-    // -- done MoveQueue ---
-
-    // Used to instantiate the GameObjects in the Scene
-    public IEnumerable<PositionedThing> GetPositionedThings()
+    private void ClearMoveQueue()
     {
-        return theBoard.GetAllPositionedThings();
+        simpleMoveQueue = null;
     }
+    // -- done MoveQueue ---
 
     public IEnumerator Run()
     {
         //TODO: logic to wait a max of X seconds (2?) before a round is played and the robots move
-        //TODO: logic to break out when the game ends or is quit
-        while (1 == 1)
+        InPlay = true;
+        while (InPlay)
         {
             MoveType? playerMove;
             while ((playerMove = RemoveNextMoveFromQueue()) == null)
@@ -117,6 +138,9 @@ public class BoardEngine
 
             CheckSpecialSquares();
         }
+        //Not InPlay anymore
+        ClearMoveQueue();
+        OnGameEnded();
     }
 
     private void CheckSpecialSquares()
@@ -130,6 +154,7 @@ public class BoardEngine
                 if (square.ThingOnMe is Block && ((Block)square.ThingOnMe).IsGameBlock)
                 {
                     DebugMessage("You win!");
+                    InPlay = false;
                 }
             }
         }

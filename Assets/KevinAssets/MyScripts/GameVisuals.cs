@@ -10,6 +10,7 @@ public class GameVisuals : MonoBehaviour
     public Transform goalSquarePrefab;
 
     private Dictionary<int, Transform> thingTransforms = new Dictionary<int, Transform>();
+    private List<Transform> otherTransforms = new List<Transform>();
 
     Transform GetThingTransform(int id)
     {
@@ -53,7 +54,8 @@ public class GameVisuals : MonoBehaviour
         var ssPositions = board.GetSpecialSquarePositions(SquareType.Goal);
         foreach (var pos in ssPositions)
         {
-            Instantiate(goalSquarePrefab, pos);
+            var transform = Instantiate(goalSquarePrefab, pos);
+            otherTransforms.Add(transform);
         }
     }
 
@@ -64,6 +66,21 @@ public class GameVisuals : MonoBehaviour
     Transform Instantiate(Transform transform, PosFace posFace)
     {
         return Instantiate(transform, GameConvert.Vector3From(posFace), GameConvert.QuaternionFrom(posFace.Facing));
+    }
+
+    public void ClearTheBoard()
+    {
+        foreach(var transform in thingTransforms.Values)
+        {
+            Destroy(transform.gameObject);
+        }
+        thingTransforms.Clear();
+
+        foreach (var transform in otherTransforms)
+        {
+            Destroy(transform.gameObject);
+        }
+        otherTransforms.Clear();
     }
 
     // --- Event Handlers ---
