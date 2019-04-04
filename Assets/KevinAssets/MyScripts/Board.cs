@@ -71,9 +71,17 @@ public class Board : BoardCore, IBoard
     } // Take the return value, remember the Id, and assign Thing & PosFace to theThings[thingId]
 
     // returns true if successfully added
+    public bool AddThingToBoard(SquareType squareType, PosFace posFace)
+    {
+        Thing newThing = Thing.Create(squareType);
+        return AddThingToBoard(newThing, posFace);
+    }
     public bool AddThingToBoard(Thing thing, PosFace posFace)
     {
+        if (thing == null)
+            return false;
         //check if thing.IdOnBoard >= 0 ?
+
         var square = SquareAt(posFace);
         //check for null?
         if (square.ThingOnMe == null)
@@ -247,5 +255,52 @@ public static class BoardTest
         b.AddThingToBoard(block, pfBlock);
 
         b.AddSquareDesignator(new Pos(8, 8), SquareType.Goal);
+    }
+
+    public static void SetupForTesting2(Board b)
+    {
+        String[] squares =
+        {
+            "0501",
+            "4010",
+            "0200",
+            "0300"
+        };
+        String[] facings =
+        {
+            "0000",
+            "3000",
+            "0000",
+            "0100"
+        };
+        int y = BoardCore.MAX_Y;
+        for (int i = 0; i < squares.Length; i++)
+        {
+            string squaresRow = squares[i];
+            string facingsRow = facings[i];
+            for (int j = 0; j < squaresRow.Length; j++)
+            {
+                //Convert chars to SquareType & Facing
+                int squareTypeInt;
+                if (!int.TryParse(squaresRow[j].ToString(), out squareTypeInt))
+                    continue;
+                SquareType squareType = (SquareType)squareTypeInt;
+                if (squareType == SquareType.Default)
+                    continue; // nothing on that square
+
+                PosFace posFace = new PosFace(j, y); // facing==Undefined
+
+                //TODO: check length of facingsRow...
+                int facingInt;
+                if (int.TryParse(facingsRow[j].ToString(), out facingInt))
+                    posFace.Facing = (Facing)facingInt;
+
+                b.AddThingToBoard((SquareType)squareTypeInt, posFace);
+
+                //TODO: AddSquareDesignator - for Goal
+            }
+            y--;
+        }
+
     }
 }

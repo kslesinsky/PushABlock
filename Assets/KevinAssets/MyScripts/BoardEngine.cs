@@ -134,7 +134,7 @@ public class BoardEngine
             //?WaitForSeconds here?
 
             CompletedRounds++;
-            DebugMessage(CompletedRounds + " rounds complete");
+            DebugMessage(CompletedRounds + " turns complete");
 
             CheckSpecialSquares();
         }
