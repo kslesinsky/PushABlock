@@ -145,7 +145,7 @@ public class BoardEngine
 
     private void CheckSpecialSquares()
     {
-        var positions = theBoard.GetSpecialSquarePositions(SquareType.Goal);
+        var positions = theBoard.GetSpecialSquarePositions(SquareDesignator.Goal);
         foreach (var goalPos in positions)
         {
             var square = theBoard.SquareAt(goalPos);

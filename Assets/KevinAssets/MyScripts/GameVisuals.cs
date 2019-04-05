@@ -51,7 +51,7 @@ public class GameVisuals : MonoBehaviour
 
     public void InstantiateOtherGameObjects(IBoard board)
     {
-        var ssPositions = board.GetSpecialSquarePositions(SquareType.Goal);
+        var ssPositions = board.GetSpecialSquarePositions(SquareDesignator.Goal);
         foreach (var pos in ssPositions)
         {
             var transform = Instantiate(goalSquarePrefab, pos);

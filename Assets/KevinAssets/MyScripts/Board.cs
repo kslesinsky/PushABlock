@@ -8,7 +8,7 @@ public interface IBoard
     IEnumerable<PositionedThing> GetAllPositionedThings();
     PositionedThing GetPositionedThing(int id);
     IEnumerable<Character> GetCharacters();
-    IEnumerable<Pos> GetSpecialSquarePositions(SquareType squareType);
+    IEnumerable<Pos> GetSpecialSquarePositions(SquareDesignator squareDesignator);
     ISurroundings GetSurroundings(Character character);
     bool TryMove(int characterId, Move move, out IEnumerable<PositionedThing> posThingsThatMoved);
 }
@@ -23,7 +23,7 @@ public class BoardCore
     protected Dictionary<int, PositionedThing> theThings = new Dictionary<int, PositionedThing>();
     //key is thing.IdOnBoard
 
-    protected Dictionary<SquareType, IEnumerable<Pos>> specialSquarePos = new Dictionary<SquareType, IEnumerable<Pos>>();
+    protected Dictionary<SquareDesignator, IEnumerable<Pos>> specialSquarePos = new Dictionary<SquareDesignator, IEnumerable<Pos>>();
 
     public BoardCore()
     {
@@ -51,11 +51,11 @@ public class BoardCore
         return square[x, y];
     }
 
-    protected List<Pos> GetSpecialSquarePosList(SquareType squareType)
+    protected List<Pos> GetSpecialSquarePosList(SquareDesignator squareDesignator)
     {
-        if (!specialSquarePos.ContainsKey(squareType))
-            specialSquarePos[squareType] = new List<Pos>();
-        return (List<Pos>)specialSquarePos[squareType];
+        if (!specialSquarePos.ContainsKey(squareDesignator))
+            specialSquarePos[squareDesignator] = new List<Pos>();
+        return (List<Pos>)specialSquarePos[squareDesignator];
     }
 }
 public class Board : BoardCore, IBoard
@@ -73,7 +73,7 @@ public class Board : BoardCore, IBoard
     {
         if (squareType == SquareType.Goal)
         {
-            return AddSquareDesignator(SquareType.Goal, posFace);
+            return AddSquareDesignator(SquareDesignator.Goal, posFace);
         }
 
         Thing newThing = Thing.Create(squareType);
@@ -101,15 +101,15 @@ public class Board : BoardCore, IBoard
         return false; // didn't add
     }
 
-    public bool AddSquareDesignator(SquareType squareType, Pos pos)
+    public bool AddSquareDesignator(SquareDesignator squareDesignator, Pos pos)
     {
         var square = SquareAt(pos);
         if (square == null)
             return false;
-        //TODO: check if Square already has a SquareType != 0
+        //TODO: check if Square already has a SquareDesignator != 0 / of this type
 
-        square.SquareType = squareType;
-        var ssPosList = GetSpecialSquarePosList(squareType);
+        square.AddDesignator(squareDesignator);
+        var ssPosList = GetSpecialSquarePosList(squareDesignator);
         ssPosList.Add(pos);
         return true;
     }
@@ -146,9 +146,9 @@ public class Board : BoardCore, IBoard
     //TODO: separate GetPlayers and GetRobots - so can have players go first?
     //     ?make a GetThings<T> where you can specify a type that derives from Thing?
 
-    public IEnumerable<Pos> GetSpecialSquarePositions(SquareType squareType)
+    public IEnumerable<Pos> GetSpecialSquarePositions(SquareDesignator squareDesignator)
     {
-        var posList = GetSpecialSquarePosList(squareType);
+        var posList = GetSpecialSquarePosList(squareDesignator);
         return posList;
         // ?should do ToArray? and should copy the Pos's so they can't be altered?
     }
@@ -253,7 +253,7 @@ public static class BoardTest
         pfBlock = new PosFace(7, 6);
         b.AddThingToBoard(SquareType.Blocky, pfBlock);
 
-        b.AddSquareDesignator(SquareType.Goal, new Pos(8, 8));
+        b.AddSquareDesignator(SquareDesignator.Goal, new Pos(8, 8));
     }
 
     public static void SetupForTesting2(Board b)

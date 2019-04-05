@@ -1,8 +1,11 @@
 ﻿
 //TODO: Revisit this.  Thinking about the int vals in a json array to define a level.
 //      But if we have Square.SquareType, we don't need to know if a Square started off with a block on it, etc... right?
+using System.Collections.Generic;
+
 public enum SquareType { Default = 0, Blocky = 1, GameBlockStart = 2, PlayerStart = 3, RobotStart = 4, Goal = 5 }
 //Blocky:starts with a block on it
+public enum SquareDesignator { Goal };
 
 public abstract class Thing
 {
@@ -79,8 +82,17 @@ public class Square
 {
     public Thing ThingOnMe { get; set; }
 
-    public SquareType SquareType { get; set; }
-    //TODO: allow more than one type (designator)
+    private List<SquareDesignator> _squareDesignators = new List<SquareDesignator>();
+    public void AddDesignator(SquareDesignator designator)
+    {
+        //TODO: check if already added
+        _squareDesignators.Add(designator);
+    }
+    public bool HasDesignator(SquareDesignator designator)
+    {
+        return _squareDesignators.Contains(designator);
+    }
+    //TODO? RemoveDesignator(), ClearDesignators()
 
     public bool CanMoveOnToMe()
     {
