@@ -1,12 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿
 //TODO: Revisit this.  Thinking about the int vals in a json array to define a level.
 //      But if we have Square.SquareType, we don't need to know if a Square started off with a block on it, etc... right?
-public enum SquareType { Default = 0, Blocky = 1, GameBlockStart = 2, CharStart = 3, RobotStart = 4, Goal = 5 }
+public enum SquareType { Default = 0, Blocky = 1, GameBlockStart = 2, PlayerStart = 3, RobotStart = 4, Goal = 5 }
 //Blocky:starts with a block on it
-//Elsewhere? designate facing of CharStart
 
 public abstract class Thing
 {
@@ -21,7 +17,7 @@ public abstract class Thing
             case SquareType.GameBlockStart:
                 thing = new Block(isGameBlock: (squareType == SquareType.GameBlockStart));
                 break;
-            case SquareType.CharStart:
+            case SquareType.PlayerStart:
                 thing = new Player();
                 break;
             case SquareType.RobotStart:
