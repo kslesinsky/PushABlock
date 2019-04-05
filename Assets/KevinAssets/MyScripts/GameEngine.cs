@@ -17,10 +17,10 @@ public class GameEngine : MonoBehaviour
         LoadTestLevelAndStart();
     }
 
-    void LoadTestLevelAndStart()
+    void LoadTestLevelAndStart(int level = 0)
     {
         var board = new Board();
-        BoardTest.SetupForTesting1(board);
+        BoardTest.SetupForTesting(board, level);
         boardEngine.UseBoard(board);
         StartGame();
     }
@@ -53,7 +53,7 @@ public class GameEngine : MonoBehaviour
         }
         GV.ClearTheBoard();
         boardEngine.RemoveTheBoardAndReset();
-        LoadTestLevelAndStart();
+        LoadTestLevelAndStart(level: 1);
     }
 
     // Update is called once per frame

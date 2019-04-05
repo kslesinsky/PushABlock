@@ -241,10 +241,14 @@ public class Board : BoardCore, IBoard
 
 public static class BoardTest
 {
-    public static void SetupForTesting1(Board b)
+    public static void SetupForTesting(Board b, int test)
     {
-        String[] squares =
+        String[] squares, facings;
+
+        if (test == 0)
         {
+            squares = new String[]
+            {
             "000000005",
             "000000000",
             "000000010",
@@ -254,9 +258,9 @@ public static class BoardTest
             "000000000",
             "000020000",
             "000030000"
-        };
-        String[] facings =
-        {
+            };
+            facings = new string[]
+            {
             "000000000",
             "000000000",
             "000000000",
@@ -266,14 +270,12 @@ public static class BoardTest
             "000000000",
             "000000000",
             "000010000"
-        };
-        SetupForTesting(b, squares, facings);
-    }
-
-    public static void SetupForTesting2(Board b)
-    {
-        String[] squares =
+            };
+        }
+        else
         {
+            squares = new string[]
+            {
             "000111000",
             "401000011",
             "000000004",
@@ -283,9 +285,9 @@ public static class BoardTest
             "000011021",
             "000015000",
             "400010140"
-        };
-        String[] facings =
-        {
+            };
+            facings = new string[]
+            {
             "000000000",
             "300000000",
             "000000004",
@@ -295,7 +297,8 @@ public static class BoardTest
             "000000000",
             "000000000",
             "300000010"
-        };
+            };
+        }
         SetupForTesting(b, squares, facings);
     }
 
