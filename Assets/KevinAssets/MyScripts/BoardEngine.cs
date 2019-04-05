@@ -126,9 +126,14 @@ public class BoardEngine
             };
 
             //?Change this to GetCharacterIds() or GetThingIds(ThingType.Character)?
-            foreach (var character in theBoard.GetCharacters())
+            foreach (var player in theBoard.GetThings<Player>())
             {
-                DoASingleTurn(character, playerDesiredMove);
+                DoSingleTurn(player, playerDesiredMove);
+                yield return new WaitForSeconds(.1f); // ?change to a regular yield return
+            }
+            foreach (var robot in theBoard.GetThings<Robot>())
+            {
+                DoSingleTurn(robot);
                 yield return new WaitForSeconds(.1f); // ?change to a regular yield return
             }
             //?WaitForSeconds here?
@@ -160,18 +165,15 @@ public class BoardEngine
         }
     }
 
-    private void DoASingleTurn(Character character, DesiredMove playerDesiredMove)
+    private void DoSingleTurn(Character character)
     {
-        DesiredMove desiredMove;
-        if (character is Player) // we assume there's one Player on the board
-        {
-            desiredMove = playerDesiredMove;
-        }
-        else // is a Robot ?
-        {
-            var surroundings = theBoard.GetSurroundings(character);
-            desiredMove = character.GetDesiredMove(surroundings);
-        }
+        var surroundings = theBoard.GetSurroundings(character);
+        var desiredMove = character.GetDesiredMove(surroundings);
+        DoSingleTurn(character, desiredMove);
+    }
+
+    private void DoSingleTurn(Character character, DesiredMove desiredMove)
+    {
         if (desiredMove.PrimaryMove != null)
         {
             IEnumerable<PositionedThing> posThingsThatMoved;

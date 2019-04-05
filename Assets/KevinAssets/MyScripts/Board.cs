@@ -7,7 +7,7 @@ public interface IBoard
     Square SquareAt(Pos pos);
     IEnumerable<PositionedThing> GetAllPositionedThings();
     PositionedThing GetPositionedThing(int id);
-    IEnumerable<Character> GetCharacters();
+    IEnumerable<T> GetThings<T>() where T : Thing;
     IEnumerable<Pos> GetSpecialSquarePositions(SquareDesignator squareDesignator);
     ISurroundings GetSurroundings(Character character);
     bool TryMove(int characterId, Move move, out IEnumerable<PositionedThing> posThingsThatMoved);
@@ -138,13 +138,19 @@ public class Board : BoardCore, IBoard
         return GetPositionedThing(thing.IdOnBoard);
     }
 
-    public IEnumerable<Character> GetCharacters()
+    public IEnumerable<T> GetThings<T>()
+        where T : Thing
+    {
+        return theThings.Values.Where(x => (x.Thing is T)).Select(x => x.Thing as T);
+    }
+
+    IEnumerable<Character> GetCharacters() // replaced by GetThings<T>()
     {
         return theThings.Values.Where(x => (x.Thing is Character)).Select(x => x.Thing as Character);
-        // ? does the above need ToArray() ? concern about a race condition...
+        // ? does the above need ToArray() ? concern about a race condition or other issue...
+        // what if one character's turn eliminates another character? --> maybe would designate that character as Dead
+        // what if one character's turn created another character? --> maybe they would have to wait until the next round
     }
-    //TODO: separate GetPlayers and GetRobots - so can have players go first?
-    //     ?make a GetThings<T> where you can specify a type that derives from Thing?
 
     public IEnumerable<Pos> GetSpecialSquarePositions(SquareDesignator squareDesignator)
     {
@@ -235,26 +241,6 @@ public class Board : BoardCore, IBoard
 
 public static class BoardTest
 {
-    public static void SetupForTestingOrig(Board b)
-    {
-        var pfPlayer = new PosFace(4, 0, Facing.North);
-        b.AddThingToBoard(SquareType.PlayerStart, pfPlayer);
-        var pfRobot = new PosFace(0, 3, Facing.East);
-        b.AddThingToBoard(SquareType.RobotStart, pfRobot);
-        pfRobot = new PosFace(8, 4, Facing.West);
-        b.AddThingToBoard(SquareType.RobotStart, pfRobot);
-
-        var pfBlock = new PosFace(4, 1);
-        b.AddThingToBoard(SquareType.GameBlockStart, pfBlock);
-        pfBlock = new PosFace(2, 3);
-        b.AddThingToBoard(SquareType.Blocky, pfBlock);
-        pfBlock = new PosFace(6, 5);
-        b.AddThingToBoard(SquareType.Blocky, pfBlock);
-        pfBlock = new PosFace(7, 6);
-        b.AddThingToBoard(SquareType.Blocky, pfBlock);
-
-        b.AddSquareDesignator(SquareDesignator.Goal, new Pos(8, 8));
-    }
     public static void SetupForTesting1(Board b)
     {
         String[] squares =
