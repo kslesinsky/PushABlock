@@ -20,7 +20,7 @@ public class GameEngine : MonoBehaviour
     void LoadTestLevelAndStart()
     {
         var board = new Board();
-        BoardTest.SetupForTesting(board);
+        BoardTest.SetupForTestingOrig(board);
         boardEngine.UseBoard(board);
         StartGame();
     }

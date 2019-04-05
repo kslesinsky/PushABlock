@@ -235,7 +235,7 @@ public class Board : BoardCore, IBoard
 
 public static class BoardTest
 {
-    public static void SetupForTesting(Board b)
+    public static void SetupForTestingOrig(Board b)
     {
         var pfPlayer = new PosFace(4, 0, Facing.North);
         b.AddThingToBoard(SquareType.PlayerStart, pfPlayer);
@@ -255,23 +255,66 @@ public static class BoardTest
 
         b.AddSquareDesignator(SquareDesignator.Goal, new Pos(8, 8));
     }
+    public static void SetupForTesting1(Board b)
+    {
+        String[] squares =
+        {
+            "000000005",
+            "000000000",
+            "000000010",
+            "000000100",
+            "000000004",
+            "401000000",
+            "000000000",
+            "000020000",
+            "000030000"
+        };
+        String[] facings =
+        {
+            "000000000",
+            "000000000",
+            "000000000",
+            "000000000",
+            "000000002",
+            "300000000",
+            "000000000",
+            "000000000",
+            "000010000"
+        };
+        SetupForTesting(b, squares, facings);
+    }
 
     public static void SetupForTesting2(Board b)
     {
         String[] squares =
         {
-            "0501",
-            "4010",
-            "0200",
-            "0300"
+            "000111000",
+            "401000011",
+            "000000004",
+            "000000000",
+            "000000000",
+            "300000001",
+            "000011021",
+            "000015000",
+            "400010140"
         };
         String[] facings =
         {
-            "0000",
-            "3000",
-            "0000",
-            "0100"
+            "000000000",
+            "300000000",
+            "000000004",
+            "000000000",
+            "000000000",
+            "300000000",
+            "000000000",
+            "000000000",
+            "300000010"
         };
+        SetupForTesting(b, squares, facings);
+    }
+
+    public static void SetupForTesting(Board b, String[] squares, String[] facings)
+    {
         int y = BoardCore.MAX_Y;
         for (int i = 0; i < squares.Length; i++)
         {
@@ -289,14 +332,12 @@ public static class BoardTest
 
                 PosFace posFace = new PosFace(j, y); // facing==Undefined
 
-                //TODO: check length of facingsRow...
+                //TODO: check length of facingsRow, in case it's shorter...
                 int facingInt;
                 if (int.TryParse(facingsRow[j].ToString(), out facingInt))
                     posFace.Facing = (Facing)facingInt;
 
                 b.AddThingToBoard((SquareType)squareTypeInt, posFace);
-
-                //TODO: AddSquareDesignator - for Goal
             }
             y--;
         }
