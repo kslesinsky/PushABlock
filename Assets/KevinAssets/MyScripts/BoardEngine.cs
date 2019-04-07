@@ -8,6 +8,7 @@ public class BoardEventArgs : EventArgs
     public int ThingId { get; set; }
     public PosFace NewPosFace { get; set; }
     public String Message { get; set; }
+    public int RoundsCompleted { get; set; }
 }
 
 public class BoardEngine
@@ -25,6 +26,20 @@ public class BoardEngine
             };
             handler(null, args);
             //handler(this, args); // don't need to pass this ?
+        }
+    }
+
+    public event EventHandler<BoardEventArgs> RoundCompleted;
+    protected virtual void OnRoundCompleted()
+    {
+        var handler = RoundCompleted;
+        if (handler != null)
+        {
+            var args = new BoardEventArgs
+            {
+                RoundsCompleted = this.CompletedRounds
+            };
+            handler(null, args);
         }
     }
 
@@ -139,7 +154,7 @@ public class BoardEngine
             //?WaitForSeconds here?
 
             CompletedRounds++;
-            DebugMessage(CompletedRounds + " turns complete");
+            OnRoundCompleted();
 
             CheckSpecialSquares();
         }

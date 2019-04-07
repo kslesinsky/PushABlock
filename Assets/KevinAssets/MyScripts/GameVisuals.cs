@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameVisuals : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class GameVisuals : MonoBehaviour
     public Transform blockPrefab;
     public Transform gameblockPrefab;
     public Transform goalSquarePrefab;
+    public Text statusText;
+    public Text centerText;
 
     private Dictionary<int, Transform> thingTransforms = new Dictionary<int, Transform>();
     private List<Transform> otherTransforms = new List<Transform>();
@@ -81,6 +84,18 @@ public class GameVisuals : MonoBehaviour
             Destroy(transform.gameObject);
         }
         otherTransforms.Clear();
+        SetRoundsCompleted(0);
+        SetCenterText(null);
+    }
+
+    public void SetRoundsCompleted(int numCompleted)
+    {
+        statusText.text = "Turns Completed: " + numCompleted;
+    }
+
+    public void SetCenterText(string message)
+    {
+        centerText.text = message;
     }
 
     // --- Event Handlers ---
@@ -88,6 +103,7 @@ public class GameVisuals : MonoBehaviour
     public void SetEventHandlers(BoardEngine boardEngine)
     {
         boardEngine.ThingMoved += ThingMovedHandler;
+        boardEngine.RoundCompleted += RoundCompletedHandler;
         boardEngine.DebugMessageEvent += DebugMessageHandler;
     }
 
@@ -103,6 +119,11 @@ public class GameVisuals : MonoBehaviour
             transform.position = GameConvert.Vector3From(pf);
             transform.rotation = GameConvert.QuaternionFrom(pf.Facing);
         }
+    }
+
+    void RoundCompletedHandler(object sender, BoardEventArgs args)
+    {
+        SetRoundsCompleted(args.RoundsCompleted);
     }
 
     void DebugMessageHandler(object sender, BoardEventArgs args)

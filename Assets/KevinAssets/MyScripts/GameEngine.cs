@@ -31,6 +31,7 @@ public class GameEngine : MonoBehaviour
         var board = boardEngine.TheBoard;
         GV.InstantiateGameObjectsFromThings(board);
         GV.InstantiateOtherGameObjects(board);
+        GV.SetRoundsCompleted(0);
         StartCoroutine(boardEngine.Run());
     }
 
@@ -42,7 +43,7 @@ public class GameEngine : MonoBehaviour
 
     IEnumerator WaitForRestart()
     {
-        print("Press space to play again.");
+        GV.SetCenterText("Press SPACE to continue.");
         bool waiting = true;
         while (waiting)
         {
@@ -54,6 +55,7 @@ public class GameEngine : MonoBehaviour
         GV.ClearTheBoard();
         boardEngine.RemoveTheBoardAndReset();
         LoadTestLevelAndStart(level: 1);
+        // Any issues here, like having a loop in the call stack?
     }
 
     // Update is called once per frame
