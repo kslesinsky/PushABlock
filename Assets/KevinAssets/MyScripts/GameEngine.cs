@@ -11,8 +11,10 @@ public class GameEngine : MonoBehaviour
     void Start()
     {
         boardEngine = new BoardEngine();
+        boardEngine.ThingMoved += ThingMovedHandler;
+        boardEngine.RoundCompleted += RoundCompletedHandler;
         boardEngine.GameEnded += GameEndedHandler;
-        GV.SetEventHandlers(boardEngine);
+        boardEngine.DebugMessageEvent += DebugMessageHandler;
 
         LoadTestLevelAndStart();
     }
@@ -33,6 +35,18 @@ public class GameEngine : MonoBehaviour
         GV.InstantiateOtherGameObjects(board);
         GV.SetRoundsCompleted(0);
         StartCoroutine(boardEngine.Run());
+    }
+
+    // --- Event Handlers ---
+
+    void ThingMovedHandler(object sender, BoardEventArgs args)
+    {
+        GV.UpdateThing(args.ThingId, args.NewPosFace);
+    }
+
+    void RoundCompletedHandler(object sender, BoardEventArgs args)
+    {
+        GV.SetRoundsCompleted(args.RoundsCompleted);
     }
 
     void GameEndedHandler(object sender, BoardEventArgs args)
@@ -58,7 +72,13 @@ public class GameEngine : MonoBehaviour
         // Any issues here, like having a loop in the call stack?
     }
 
-    // Update is called once per frame
+    void DebugMessageHandler(object sender, BoardEventArgs args)
+    {
+        Debug.Log(args.Message);
+    }
+
+    // --- Update is called once per frame ---
+
     void Update()
     {
         if (boardEngine != null && boardEngine.InPlay)

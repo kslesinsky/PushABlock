@@ -23,6 +23,18 @@ public class GameVisuals : MonoBehaviour
             return null;
     }
 
+    public void UpdateThing(int thingId, PosFace newPosFace)
+    {
+        var transform = GetThingTransform(thingId);
+        if (transform != null)
+        {
+            transform.position = GameConvert.Vector3From(newPosFace);
+            transform.rotation = GameConvert.QuaternionFrom(newPosFace.Facing);
+        }
+    }
+
+    // --- Instantiation of GameObjects ---
+
     public void InstantiateGameObjectsFromThings(IBoard board)
     {
         foreach (var posThing in board.GetAllPositionedThings())
@@ -97,38 +109,4 @@ public class GameVisuals : MonoBehaviour
     {
         centerText.text = message;
     }
-
-    // --- Event Handlers ---
-
-    public void SetEventHandlers(BoardEngine boardEngine)
-    {
-        boardEngine.ThingMoved += ThingMovedHandler;
-        boardEngine.RoundCompleted += RoundCompletedHandler;
-        boardEngine.DebugMessageEvent += DebugMessageHandler;
-    }
-
-    void ThingMovedHandler(object sender, BoardEventArgs args)
-    {
-        var pf = args.NewPosFace;
-        //var msg = string.Format("{0}: {1},{2} {3}", args.ThingId, pf.X, pf.Y, pf.Facing);
-        //print(msg);
-
-        var transform = GetThingTransform(args.ThingId);
-        if (transform != null)
-        {
-            transform.position = GameConvert.Vector3From(pf);
-            transform.rotation = GameConvert.QuaternionFrom(pf.Facing);
-        }
-    }
-
-    void RoundCompletedHandler(object sender, BoardEventArgs args)
-    {
-        SetRoundsCompleted(args.RoundsCompleted);
-    }
-
-    void DebugMessageHandler(object sender, BoardEventArgs args)
-    {
-        Debug.Log(args.Message);
-    }
-
 }
