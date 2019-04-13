@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameEngine : MonoBehaviour
 {
@@ -19,10 +20,10 @@ public class GameEngine : MonoBehaviour
         LoadTestLevelAndStart();
     }
 
-    void LoadTestLevelAndStart(int level = 0)
+    void LoadTestLevelAndStart()
     {
         var board = new Board();
-        BoardTest.SetupForTesting(board, level);
+        BoardTest.SetupForTesting(board, MainEngine.Level);
         boardEngine.UseBoard(board);
         StartGame();
     }
@@ -58,7 +59,7 @@ public class GameEngine : MonoBehaviour
 
     IEnumerator WaitForRestart()
     {
-        GV.SetCenterText("Press SPACE to continue.");
+        GV.SetCenterText("Congratulations! Press SPACE to continue.");
         yield return null;
 
         bool waiting = true;
@@ -71,8 +72,9 @@ public class GameEngine : MonoBehaviour
         }
         GV.ClearTheBoard();
         boardEngine.RemoveTheBoardAndReset();
-        LoadTestLevelAndStart(level: 1);
-        // Any issues here, like having a loop in the call stack?
+        // Is the above necessary, or when you load another scene does everything get destroyed and GCed?
+
+        SceneManager.LoadScene("MainMenu");
     }
 
     void DebugMessageHandler(object sender, BoardEventArgs args)

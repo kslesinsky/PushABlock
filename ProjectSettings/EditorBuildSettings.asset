@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/KevinAssets/MyScenes/PlayALevel.unity
+    guid: e45b9f173be1703428fa9e7303c6c2d3
   m_configObjects: {}
