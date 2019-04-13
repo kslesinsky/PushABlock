@@ -35,6 +35,17 @@ public class Pos
         return new Pos(p.X * i, p.Y * i);
     }
 
+    //public static void Test()
+    //{
+    //    Pos a = new Pos(3, 2);
+    //    Pos b = new Pos(5, 5);
+    //    Pos c = a + b;
+
+    //    Pos dir = new Pos(0, 1);
+    //    Pos z = dir * 3;
+    //}
+
+
     //TODO: make readonly somewhere? and static?
     // Get the vector in the direction of the specified Facing
     public static Pos ForwardFor(Facing f)

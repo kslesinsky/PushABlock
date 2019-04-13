@@ -3,8 +3,7 @@
 //      But if we have Square.SquareType, we don't need to know if a Square started off with a block on it, etc... right?
 using System.Collections.Generic;
 
-public enum SquareType { Default = 0, Blocky = 1, GameBlockStart = 2, PlayerStart = 3, RobotStart = 4, Goal = 5 }
-//Blocky:starts with a block on it
+public enum SquareType { Default = 0, BlockStart = 1, GameBlockStart = 2, PlayerStart = 3, RobotStart = 4, Goal = 5 }
 public enum SquareDesignator { Goal };
 
 public abstract class Thing
@@ -16,7 +15,7 @@ public abstract class Thing
         Thing thing = null;
         switch (squareType)
         {
-            case SquareType.Blocky:
+            case SquareType.BlockStart:
             case SquareType.GameBlockStart:
                 thing = new Block(isGameBlock: (squareType == SquareType.GameBlockStart));
                 break;

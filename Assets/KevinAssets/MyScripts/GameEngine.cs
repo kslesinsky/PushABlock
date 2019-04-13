@@ -31,8 +31,7 @@ public class GameEngine : MonoBehaviour
     {
         // add Things & designators to the board
         var board = boardEngine.TheBoard;
-        GV.InstantiateGameObjectsFromThings(board);
-        GV.InstantiateOtherGameObjects(board);
+        GV.InstantiateGameObjects(board);
         GV.SetRoundsCompleted(0);
         StartCoroutine(boardEngine.Run());
     }
@@ -55,9 +54,13 @@ public class GameEngine : MonoBehaviour
         StartCoroutine(WaitForRestart());
     }
 
+    // ? Does the coroutine start in the follow frame ?
+
     IEnumerator WaitForRestart()
     {
         GV.SetCenterText("Press SPACE to continue.");
+        yield return null;
+
         bool waiting = true;
         while (waiting)
         {

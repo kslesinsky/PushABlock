@@ -35,7 +35,13 @@ public class GameVisuals : MonoBehaviour
 
     // --- Instantiation of GameObjects ---
 
-    public void InstantiateGameObjectsFromThings(IBoard board)
+    public void InstantiateGameObjects(IBoard board)
+    {
+        InstantiateGameObjectsFromThings(board);
+        InstantiateOtherGameObjects(board);
+    }
+
+    void InstantiateGameObjectsFromThings(IBoard board)
     {
         foreach (var posThing in board.GetAllPositionedThings())
         {
@@ -64,7 +70,7 @@ public class GameVisuals : MonoBehaviour
         }
     }
 
-    public void InstantiateOtherGameObjects(IBoard board)
+    void InstantiateOtherGameObjects(IBoard board)
     {
         var ssPositions = board.GetSpecialSquarePositions(SquareDesignator.Goal);
         foreach (var pos in ssPositions)

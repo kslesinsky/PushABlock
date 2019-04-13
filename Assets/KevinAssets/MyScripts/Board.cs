@@ -13,7 +13,7 @@ public interface IBoard
     bool TryMove(int characterId, Move move, out IEnumerable<PositionedThing> posThingsThatMoved);
 }
 
-public class BoardCore
+public abstract class BoardCore
 {
     public const int MAX_X = 8;
     public const int MAX_Y = 8;
@@ -87,7 +87,9 @@ public class Board : BoardCore, IBoard
         //check if thing.IdOnBoard >= 0 ?
 
         var square = SquareAt(posFace);
-        //check for null?
+        if (square == null)
+            return false;
+
         if (square.ThingOnMe == null)
         {
             int id = NewEmptyThing();
