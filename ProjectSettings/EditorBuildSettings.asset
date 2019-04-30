@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/KevinAssets/MyScenes/MainMenu.unity
+    guid: f2235e2baf4bd24468e02bf67f753b6c
+  - enabled: 1
     path: Assets/KevinAssets/MyScenes/PlayALevel.unity
     guid: e45b9f173be1703428fa9e7303c6c2d3
   m_configObjects: {}
