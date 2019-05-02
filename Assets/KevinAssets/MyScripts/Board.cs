@@ -241,73 +241,15 @@ public class Board : BoardCore, IBoard
     }
 }
 
-public static class BoardTest
+public static class BoardLoader
 {
-    public static void SetupForTesting(Board b, int test)
+    public static void LoadFromStringArrays(Board b, String[] squares, String[] facings)
     {
-        String[] squares, facings;
+        if (squares == null || facings == null)
+            return;
 
-        if (test == 0)
-        {
-            squares = new String[]
-            {
-            "000000005",
-            "000000000",
-            "000000010",
-            "000000100",
-            "000000004",
-            "401000000",
-            "000000000",
-            "000020000",
-            "000030000"
-            };
-            facings = new string[]
-            {
-            "000000000",
-            "000000000",
-            "000000000",
-            "000000000",
-            "000000002",
-            "300000000",
-            "000000000",
-            "000000000",
-            "000010000"
-            };
-        }
-        else
-        {
-            squares = new string[]
-            {
-            "000111000",
-            "401000011",
-            "000000004",
-            "000000000",
-            "000000000",
-            "300000001",
-            "000011021",
-            "000015000",
-            "400010140"
-            };
-            facings = new string[]
-            {
-            "000000000",
-            "300000000",
-            "000000004",
-            "000000000",
-            "000000000",
-            "300000000",
-            "000000000",
-            "000000000",
-            "300000010"
-            };
-        }
-        SetupForTesting(b, squares, facings);
-    }
-
-    public static void SetupForTesting(Board b, String[] squares, String[] facings)
-    {
         int y = BoardCore.MAX_Y;
-        for (int i = 0; i < squares.Length; i++)
+        for (int i = 0; i < squares.Length; i++) // loop through the rows in the text arrays, top to bottom
         {
             string squaresRow = squares[i];
             string facingsRow = facings[i];
@@ -323,15 +265,14 @@ public static class BoardTest
 
                 PosFace posFace = new PosFace(j, y); // facing==Undefined
 
-                //TODO: check length of facingsRow, in case it's shorter...
+                // (Checks length of facingsRow, in case it's shorter...)
                 int facingInt;
-                if (int.TryParse(facingsRow[j].ToString(), out facingInt))
+                if (j < facingsRow.Length && int.TryParse(facingsRow[j].ToString(), out facingInt))
                     posFace.Facing = (Facing)facingInt;
 
                 b.AddThingToBoard((SquareType)squareTypeInt, posFace);
             }
             y--;
         }
-
     }
 }

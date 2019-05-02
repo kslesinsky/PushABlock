@@ -17,14 +17,17 @@ public class GameEngine : MonoBehaviour
         boardEngine.GameEnded += GameEndedHandler;
         boardEngine.DebugMessageEvent += DebugMessageHandler;
 
-        LoadTestLevelAndStart();
+        LoadLevelAndStart();
     }
 
-    void LoadTestLevelAndStart()
+    void LoadLevelAndStart()
     {
         var board = new Board();
-        BoardTest.SetupForTesting(board, MainEngine.Level);
+        BoardLoader.LoadFromStringArrays(board, LevelInfo.Squares, LevelInfo.Facings);
         boardEngine.UseBoard(board);
+
+        //TODO: display level# onscreen.  ?store in BoardEngine or Board?
+
         StartGame();
     }
 
@@ -34,7 +37,25 @@ public class GameEngine : MonoBehaviour
         var board = boardEngine.TheBoard;
         GV.InstantiateGameObjects(board);
         GV.SetRoundsCompleted(0);
+
         StartCoroutine(boardEngine.Run());
+    }
+
+    // --- Update is called once per frame ---
+
+    void Update()
+    {
+        if (boardEngine != null && boardEngine.InPlay)
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+                boardEngine.AddToMoveQueue(MoveType.Forward);
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+                boardEngine.AddToMoveQueue(MoveType.Reverse);
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
+                boardEngine.AddToMoveQueue(MoveType.RotLeft);
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+                boardEngine.AddToMoveQueue(MoveType.RotRight);
+        }
     }
 
     // --- Event Handlers ---
@@ -80,22 +101,5 @@ public class GameEngine : MonoBehaviour
     void DebugMessageHandler(object sender, BoardEventArgs args)
     {
         Debug.Log(args.Message);
-    }
-
-    // --- Update is called once per frame ---
-
-    void Update()
-    {
-        if (boardEngine != null && boardEngine.InPlay)
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-                boardEngine.AddToMoveQueue(MoveType.Forward);
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
-                boardEngine.AddToMoveQueue(MoveType.Reverse);
-            else if (Input.GetKeyDown(KeyCode.LeftArrow))
-                boardEngine.AddToMoveQueue(MoveType.RotLeft);
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
-                boardEngine.AddToMoveQueue(MoveType.RotRight);
-        }
     }
 }
