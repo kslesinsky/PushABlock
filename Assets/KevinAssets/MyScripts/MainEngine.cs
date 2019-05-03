@@ -25,18 +25,21 @@ public class MainEngine : MonoBehaviour
 
 }
 
-public static class LevelInfo
+public class LevelInfo
 {
-    public static int Level;
-    public static string[] Squares, Facings; // for the level that will be played
+    public static LevelInfo CurrentLevelInfo; // used in the PlayALevel scene
+
+    public int Level;
+    public string[] Squares { get; set; }
+    public string[] Facings { get; set; }
 
     public static void SetLevelData(int level)
     {
-        LevelInfo.Level = level;
+        var levelInfo = new LevelInfo { Level = level };
 
         if (level == 1)
         {
-            Squares = new string[]
+            levelInfo.Squares = new string[]
             {
             "000111000",
             "401000011",
@@ -48,7 +51,7 @@ public static class LevelInfo
             "000015000",
             "400010140"
             };
-            Facings = new string[]
+            levelInfo.Facings = new string[]
             {
             "000000000",
             "300000000",
@@ -63,7 +66,7 @@ public static class LevelInfo
         }
         else // default: level 0
         {
-            Squares = new string[]
+            levelInfo.Squares = new string[]
             {
             "000000005",
             "000000000",
@@ -75,7 +78,7 @@ public static class LevelInfo
             "000020000",
             "000030000"
             };
-            Facings = new string[]
+            levelInfo.Facings = new string[]
             {
             "000000000",
             "000000000",
@@ -88,5 +91,6 @@ public static class LevelInfo
             "000010000"
             };
         }
+        CurrentLevelInfo = levelInfo; //set the static instance that will be used in the PlayALevel scene
     }
 }

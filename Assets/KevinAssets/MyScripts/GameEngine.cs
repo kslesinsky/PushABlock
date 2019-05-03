@@ -17,13 +17,14 @@ public class GameEngine : MonoBehaviour
         boardEngine.GameEnded += GameEndedHandler;
         boardEngine.DebugMessageEvent += DebugMessageHandler;
 
-        LoadLevelAndStart();
+        var levelInfo = LevelInfo.CurrentLevelInfo;
+        LoadLevelAndStart(levelInfo);
     }
 
-    void LoadLevelAndStart()
+    void LoadLevelAndStart(LevelInfo levelInfo)
     {
         var board = new Board();
-        BoardLoader.LoadFromStringArrays(board, LevelInfo.Squares, LevelInfo.Facings);
+        BoardLoader.LoadFromLevelInfo(board, levelInfo);
         boardEngine.UseBoard(board);
 
         //TODO: display level# onscreen.  ?store in BoardEngine or Board?

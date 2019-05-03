@@ -243,6 +243,14 @@ public class Board : BoardCore, IBoard
 
 public static class BoardLoader
 {
+    public static void LoadFromLevelInfo(Board b, LevelInfo levelInfo)
+    {
+        if (levelInfo != null)
+        {
+            LoadFromStringArrays(b, levelInfo.Squares, levelInfo.Facings);
+        }
+    }
+
     public static void LoadFromStringArrays(Board b, String[] squares, String[] facings)
     {
         if (squares == null || facings == null)
