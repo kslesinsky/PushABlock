@@ -37,7 +37,34 @@ public class LevelInfo
     {
         var levelInfo = new LevelInfo { Level = level };
 
-        if (level == 1)
+        if (level == 2)
+        {
+            levelInfo.Squares = new string[]
+            {
+            "111000001",
+            "024004000",
+            "000111100",
+            "004011000",
+            "400511011",
+            "000011001",
+            "400111101",
+            "000000031",
+            "000011111"
+            };
+            levelInfo.Facings = new string[]
+            {
+            "000000000",
+            "003003000",
+            "000000000",
+            "001000000",
+            "100000000",
+            "000000000",
+            "100000000",
+            "000000020",
+            "000000000"
+            };
+        }
+        else if (level == 1)
         {
             levelInfo.Squares = new string[]
             {
