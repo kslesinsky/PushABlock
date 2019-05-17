@@ -9,6 +9,7 @@ public class BoardEventArgs : EventArgs
     public PosFace NewPosFace { get; set; }
     public String Message { get; set; }
     public int RoundsCompleted { get; set; }
+    public bool Won { get; set; }
 }
 
 public class BoardEngine
@@ -49,7 +50,10 @@ public class BoardEngine
         var handler = GameEnded;
         if (handler != null)
         {
-            var args = new BoardEventArgs();
+            var args = new BoardEventArgs
+            {
+                Won = this.Won
+            };
             handler(null, args);
         }
     }
@@ -87,13 +91,19 @@ public class BoardEngine
 
     public bool InPlay { get; private set; }
     public int CompletedRounds { get; private set; }
+    private bool Won { get; set; }
+    public bool Quit { get; set; }
 
     public void RemoveTheBoardAndReset()
     {
         // ? check if InPlay ?
         theBoard = null;
         CompletedRounds = 0;
+        Won = false;
+        Quit = false;
     }
+
+    // --- MoveQueue ---
 
     private MoveType? simpleMoveQueue; // for now, one item max in the queue
     public bool AddToMoveQueue(MoveType moveType)
@@ -121,7 +131,7 @@ public class BoardEngine
     {
         simpleMoveQueue = null;
     }
-    // -- done MoveQueue ---
+    // --- done MoveQueue ---
 
     public IEnumerator Run()
     {
@@ -129,10 +139,15 @@ public class BoardEngine
         InPlay = true;
         while (InPlay)
         {
-            MoveType? playerMove;
-            while ((playerMove = RemoveNextMoveFromQueue()) == null)
+            MoveType? playerMove = null;
+            while (!Quit && (playerMove = RemoveNextMoveFromQueue()) == null)
             {
                 yield return new WaitForSeconds(.1f);
+            }
+            if (Quit)
+            {
+                InPlay = false;
+                continue;
             }
             DesiredMove playerDesiredMove = new DesiredMove
             {
@@ -159,6 +174,7 @@ public class BoardEngine
             CheckSpecialSquares();
         }
         //Not InPlay anymore
+
         ClearMoveQueue();
         OnGameEnded();
     }
@@ -173,7 +189,7 @@ public class BoardEngine
             {
                 if (square.ThingOnMe is Block && ((Block)square.ThingOnMe).IsGameBlock)
                 {
-                    DebugMessage("You win!");
+                    Won = true;
                     InPlay = false;
                 }
             }

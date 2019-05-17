@@ -56,6 +56,9 @@ public class GameEngine : MonoBehaviour
                 boardEngine.AddToMoveQueue(MoveType.RotLeft);
             else if (Input.GetKeyDown(KeyCode.RightArrow))
                 boardEngine.AddToMoveQueue(MoveType.RotRight);
+
+            if (Input.GetKeyDown(KeyCode.Q))
+                boardEngine.Quit = true;
         }
     }
 
@@ -74,6 +77,8 @@ public class GameEngine : MonoBehaviour
     void GameEndedHandler(object sender, BoardEventArgs args)
     {
         //TODO: wait for move-animations to complete
+        string message = (args.Won ? "Congratulations! " : "") + "Press SPACE to continue.";
+        GV.SetCenterText(message);
         StartCoroutine(WaitForRestart());
     }
 
@@ -81,9 +86,6 @@ public class GameEngine : MonoBehaviour
 
     IEnumerator WaitForRestart()
     {
-        GV.SetCenterText("Congratulations! Press SPACE to continue.");
-        yield return null;
-
         bool waiting = true;
         while (waiting)
         {
